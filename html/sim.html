@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> Evolution Simulator - Launch Page </title>
+</head>
+<body>
+
+<h1> Viewing Simulation </h1>
+
+<canvas id="sim-canvas"></canvas>
+
+<script>
+
+class Creature {
+  constructor(x, y, size, speed, view_range, max_health, cohesion, aggression) {
+    this.x = x;
+    this.y = y;
+    this.size = size;
+    this.speed = speed;
+    this.view_range = view_range;
+    this.max_health = max_health;
+    this.health = max_health;
+    this.cohesion = cohesion;
+    this.aggression = aggression;
+  }
+}
+
+function color_of(creature) {
+  // Color based on traits
+  var r = (creature.speed + creature.size * 64) % 256;
+  var g = (creature.view_range + creature.max_health) % 256;
+  var b = ((creature.cohesion + creature.aggression) * 128) % 256;
+  return `rgb(${r},${g},${b})`;
+}
+
+var sim_width = 100;
+var sim_height = 100;
+var sim_tile_size = 10;
+
+const creatures = [];
+
+for (i = 0; i < 100; i++) {
+  creatures.push(new Creature(
+    Math.floor(Math.random()*sim_width),
+    Math.floor(Math.random()*sim_height),
+    Math.floor(Math.random()*5)+1, // 1 to 5
+    Math.floor(Math.random()*5)+1, // 1 to 5
+    Math.floor(Math.random()*10)+1, // 1 to 10
+    Math.floor(Math.random()*100)+1, // 1 to 100
+    Math.random(), // 0 to 1
+    Math.random() // 0 to 1
+  ));
+}
+
+var canvas = document.getElementById("sim-canvas");
+var ctx = canvas.getContext("2d");
+
+canvas.width = sim_width * sim_tile_size;
+canvas.height = sim_height * sim_tile_size;
+
+creatures.forEach(c => {console.log(color_of(c)); ctx.fillStyle = color_of(c); ctx.fillRect(c.x * sim_tile_size, c.y * sim_tile_size, c.size * sim_tile_size, c.size * sim_tile_size);});
+
+
+ctx.fillStyle = "black";
+ctx.beginPath();
+for (x = 0; x <= sim_width + 1; x++) {
+  ctx.moveTo(x * sim_tile_size, 0);
+  ctx.lineTo(x * sim_tile_size, sim_tile_size * sim_height);
+}
+for (y = 0; y <= sim_height + 1; y++) {
+  ctx.moveTo(0, y * sim_tile_size);
+  ctx.lineTo(sim_tile_size * sim_width, y * sim_tile_size);
+}
+ctx.stroke();
+
+</script>
+
+</body>
+</html>
