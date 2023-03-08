@@ -5,6 +5,7 @@
 + Install docker desktop
 + Run `$ docker compose up` or `$ docker compose -d` (run in background)
 + Try the following either with a browser or curl (recommend curl for testing backend):
+**Caution**: This will open port 8080 on the machine it is run on.
 
 #### Frontend:
 ```
