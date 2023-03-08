@@ -1,3 +1,8 @@
+# This creates the following:
+# - Container evolution-sim-nginx-1
+# - Container evolution-sim-redis-1
+# - Network evolution-sim_default
+
 services:
   nginx:
     image: nginx
@@ -5,3 +10,8 @@ services:
       - 8080:80
     volumes:
       - ./html:/usr/share/nginx/html
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379 # This is default. But for reference purposes.
