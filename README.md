@@ -21,10 +21,15 @@ $ curl http://localhost:8080/sim.html
 # HTTP/1.0 GET / (note the trailing slash...)
 $ curl http://localhost:8080/evol/
 
-# HTTP/1.0 GET /run
-$ curl http://localhost:8080/evol/run
+# HTTP/1.0 POST /run
+$ curl -v -i \
+    -H "Content-Type: application/json" \
+    -d '{"name": "job_one"}' \
+    http://localhost:8080/evol/run
 
-## Not implemented yet ##
-# HTTP/1.0 POST /load
-$ curl -X POST -d 'key=value' http://localhost:8080/evol/load
+# Now, if you want to check redis db:
+$ docker exec -it evolution-sim-redis-1 bash
+$ ...
+$ redis-cli
+$ ... # Enter cmd like "GET test-key" --> "test-value"
 ```
