@@ -8,8 +8,10 @@ services:
     image: evol/broker
     build: ./broker
     environment:
-      -PORT: 8000
- 
+      HOST: 0.0.0.0
+      PORT: 8000
+      REDIS: redis://redis/
+
   nginx:
     image: nginx
     ports:
