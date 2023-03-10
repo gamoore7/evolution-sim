@@ -67,13 +67,36 @@ function addSpecies() {
 function validate() {
   var num_tabs = $("div#species_tabs ul li").length;
   var problem = false;
-  if ($("num-timesteps").value < 1 || $("view-granularity").value < 1 || $("view-granularity").value > $("num-timesteps").value) { problem = true;}
+  if (document.getElementById("num-timesteps").value < 1 || document.getElementById("view-granularity").value < 1 || document.getElementById("view-granularity").value > document.getElementById("num-timesteps").value) { problem = true;}
   for (var i = 1; i <= num_tabs; i++) {
-    if ($("div#num-of-species-" + i).value < 1 || $("div#size-of-species-" + i).value < 1 || $("div#speed-of-species-" + i).value <= 0 || $("div#sight-of-species-" + i).value <= 0 || $("div#health-of-species-" + i).value <= 0 || $("div#cohesion-of-species-" + i).value < 0 || $("div#cohesion-of-species-" + i).value > 1 || $("div#aggression-of-species-" + i).value < 0 || $("div#aggression-of-species-" + i).value > 1) {
+    if (document.getElementById("num-of-species-" + i).value < 1 || document.getElementById("size-of-species-" + i).value < 1 || document.getElementById("speed-of-species-" + i).value <= 0 || document.getElementById("sight-of-species-" + i).value <= 0 || document.getElementById("health-of-species-" + i).value <= 0 || document.getElementById("cohesion-of-species-" + i).value < 0 || document.getElementById("cohesion-of-species-" + i).value > 1 || document.getElementById("aggression-of-species-" + i).value < 0 || document.getElementById("aggression-of-species-" + i).value > 1) {
       problem = true;
     }
   }
   return !validate;
+}
+
+function generateJSON() {
+  var num_tabs = $("div#species_tabs ul li").length;
+  var structure = {
+    numTimesteps: parseInt(document.getElementById("num-timesteps").value),
+    viewGranularity: document.getElementById("view-granularity").value,
+    cacheViews: document.getElementById("cache-views").checked,
+    species: []
+  };
+  for (var i = 1; i <= num_tabs; i++) {
+    structure["species"].push({
+      startingNumber: document.getElementById("num-of-species-" + i).value,
+      size: document.getElementById("size-of-species-" + i).value,
+      speed: document.getElementById("speed-of-species-" + i).value,
+      sight: document.getElementById("speed-of-species-" + i).value,
+      health: document.getElementById("health-of-species-" + i).value,
+      cohesion: document.getElementById("cohesion-of-species-" + i).value,
+      aggression: document.getElementById("aggression-of-species-" + i).value,
+    });
+  }
+  console.log(num_tabs);
+  console.log(JSON.stringify(structure));
 }
 
 </script>
@@ -93,7 +116,8 @@ function validate() {
 
 </br>
 
-<input type="checkbox" id="cache-views" name="cache-views" value="Cache simulation (recommended)">
+<input type="checkbox" id="cache-views" name="cache-views" checked>
+<label for="cache-views">Cache simulation (recommended)</label>
 
 </br>
 
@@ -140,7 +164,7 @@ function validate() {
   </div>
 </div>
 
-<input type="button" id="run-simulation" name="run-simulation" value="Run simulation!">
+<input type="button" id="run-simulation" name="run-simulation" value="Run simulation!" onclick="generateJSON()">
 
 </body>
 </html>
