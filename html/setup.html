@@ -14,6 +14,70 @@ $(function() {
 });  
 
 </script> 
+<script>
+
+function addSpecies() {
+  var num_tabs = $("div#species_tabs ul li").length + 1;
+
+  var tab_html = `
+    <label for="num-of-species-` + num_tabs + `">Number of creatures to begin with:</label>
+    <input type="number" id="num-of-species-` + num_tabs + `" name="num-of-species-` + num_tabs + `" min="1" value="10">
+
+    </br>
+
+    <label for="size-of-species-` + num_tabs + `">Starting size:</label>
+    <input type="number" id="size-of-species-` + num_tabs + `" name="size-of-species-` + num_tabs + `" min="1" value="2">
+
+    </br>
+
+    <label for="speed-of-species-` + num_tabs + `">Starting speed:</label>
+    <input type="number" id="speed-of-species-` + num_tabs + `" name="speed-of-species-` + num_tabs + `" min="1" value="10">
+    
+    </br>
+
+    <label for="sight-of-species-` + num_tabs + `">Starting vision range:</label>
+    <input type="number" id="sight-of-species-` + num_tabs + `" name="sight-of-species-` + num_tabs + `" min="1" value="10">
+    
+    </br>
+
+    <label for="health-of-species-` + num_tabs + `">Starting health:</label>
+    <input type="number" id="health-of-species-` + num_tabs + `" name="health-of-species-` + num_tabs + `" min="1" value="10">
+    
+    </br>
+
+    <label for="cohesion-of-species-` + num_tabs + `">Starting cohesion:</label>
+    <input type="number" id="cohesion-of-species-` + num_tabs + `" name="cohesion-of-species-` + num_tabs + `" min="1" value="0.5">
+    
+    </br>
+
+    <label for="aggression-of-species-` + num_tabs + `">Starting aggression:</label>
+    <input type="number" id="aggression-of-species-` + num_tabs + `" name="aggression-of-species-` + num_tabs + `" min="1" value="0.5">
+ `;
+
+  $("div#species_tabs ul").append(
+    "<li><a href='#species_" + num_tabs + "'>" + num_tabs + "</a></li>"
+  );
+
+  $("div#species_tabs").append(
+    "<div id='species_" + num_tabs + "'>" + tab_html + "</div>"
+  );
+  $("div#species_tabs").tabs("refresh");
+}
+
+function validate() {
+  var num_tabs = $("div#species_tabs ul li").length;
+  var problem = false;
+  if ($("num-timesteps").value < 1 || $("view-granularity").value < 1 || $("view-granularity").value > $("num-timesteps").value) { problem = true;}
+  for (var i = 1; i <= num_tabs; i++) {
+    if ($("div#num-of-species-" + i).value < 1 || $("div#size-of-species-" + i).value < 1 || $("div#speed-of-species-" + i).value <= 0 || $("div#sight-of-species-" + i).value <= 0 || $("div#health-of-species-" + i).value <= 0 || $("div#cohesion-of-species-" + i).value < 0 || $("div#cohesion-of-species-" + i).value > 1 || $("div#aggression-of-species-" + i).value < 0 || $("div#aggression-of-species-" + i).value > 1) {
+      problem = true;
+    }
+  }
+  return !validate;
+}
+
+</script>
+
 </head>
 <body>
 
@@ -66,73 +130,17 @@ $(function() {
     </br>
 
     <label for="cohesion-of-species-1">Starting cohesion:</label>
-    <input type="number" id="cohesion-of-species-1" name="cohesion-of-species-1" min="1" value="10">
+    <input type="number" id="cohesion-of-species-1" name="cohesion-of-species-1" min="1" value="0.5">
   
     </br>
 
     <label for="aggression-of-species-1">Starting aggression:</label>
-    <input type="number" id="aggression-of-species-1" name="aggression-of-species-1" min="1" value="10">
+    <input type="number" id="aggression-of-species-1" name="aggression-of-species-1" min="1" value="0.5">
   
   </div>
 </div>
 
 <input type="button" id="run-simulation" name="run-simulation" value="Run simulation!">
-
-<script>
-
-function addSpecies() {
-  var num_tabs = $("div#species_tabs ul li").length + 1;
-
-  var tab_html = `
-    <label for="num-of-species-` + num_tabs + `">Number of creatures to begin with:</label>
-    <input type="number" id="num-of-species-` + num_tabs + `" name="num-of-species-` + num_tabs + `" min="1" value="10">
-
-    </br>
-
-    <label for="size-of-species-` + num_tabs + `">Starting size:</label>
-    <input type="number" id="size-of-species-` + num_tabs + `" name="size-of-species-` + num_tabs + `" min="1" value="2">
-
-    </br>
-
-    <label for="speed-of-species-` + num_tabs + `">Starting speed:</label>
-    <input type="number" id="speed-of-species-` + num_tabs + `" name="speed-of-species-` + num_tabs + `" min="1" value="10">
-    
-    </br>
-
-    <label for="sight-of-species-` + num_tabs + `">Starting vision range:</label>
-    <input type="number" id="sight-of-species-` + num_tabs + `" name="sight-of-species-` + num_tabs + `" min="1" value="10">
-    
-    </br>
-
-    <label for="health-of-species-` + num_tabs + `">Starting health:</label>
-    <input type="number" id="health-of-species-` + num_tabs + `" name="health-of-species-` + num_tabs + `" min="1" value="10">
-    
-    </br>
-
-    <label for="cohesion-of-species-` + num_tabs + `">Starting cohesion:</label>
-    <input type="number" id="cohesion-of-species-` + num_tabs + `" name="cohesion-of-species-` + num_tabs + `" min="1" value="10">
-    
-    </br>
-
-    <label for="aggression-of-species-` + num_tabs + `">Starting aggression:</label>
-    <input type="number" id="aggression-of-species-` + num_tabs + `" name="aggression-of-species-` + num_tabs + `" min="1" value="10">
- `;
-
-  $("div#species_tabs ul").append(
-    "<li><a href='#species_" + num_tabs + "'>" + num_tabs + "</a></li>"
-  );
-
-  $("div#species_tabs").append(
-    "<div id='species_" + num_tabs + "'>" + tab_html + "</div>"
-  );
-  $("div#species_tabs").tabs("refresh");
-}
-
-function viewSpecies(evt, species_id) {
-
-}
-
-</script>
 
 </body>
 </html>
