@@ -8,5 +8,5 @@ RUN apt-get update
 RUN apt-get install -y #extra-runtime-dependencies
 RUN rm -rf /var/lib/apt/lists/*
 COPY --from=builder /usr/local/cargo/bin/broker /usr/local/bin/broker
-EXPOSE 8000
+#EXPOSE 8000
 CMD ["broker"]

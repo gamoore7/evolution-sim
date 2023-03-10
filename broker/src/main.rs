@@ -1,3 +1,5 @@
+use std::env;
+
 use actix_web::{HttpServer, HttpRequest, App, get, post, Responder};
 
 #[post("/load")]
@@ -18,13 +20,18 @@ async fn index(req: HttpRequest) -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    let port = env::var("PORT")
+        .expect("Required: Broker server port.")
+        .parse::<u16>()
+        .expect("Required: Broker server port must be u16.");
+
     HttpServer::new(|| {
         App::new()
             .service(index)
             .service(run)
             .service(load)
     })
-    .bind(("0.0.0.0", 8000))?
+    .bind(("0.0.0.0", port))?
     .run()
     .await
 }
