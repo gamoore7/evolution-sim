@@ -40,7 +40,43 @@ $(function() {
     <li><a href="#species_1">1</a></li>  
   </ul> 
   <div id="species_1">
+    <label for="num-of-species-1">Number of creatures to begin with:</label>
+    <input type="number" id="num-of-species-1" name="num-of-species-1" min="1" value="10">
+
+    </br>
+
+    <label for="size-of-species-1">Starting size:</label>
+    <input type="number" id="size-of-species-1" name="size-of-species-1" min="1" value="2">
+
+    </br>
+
+    <label for="speed-of-species-1">Starting speed:</label>
+    <input type="number" id="speed-of-species-1" name="speed-of-species-1" min="1" value="10">
+    
+    </br>
+
+    <label for="sight-of-species-1">Starting vision range:</label>
+    <input type="number" id="sight-of-species-1" name="sight-of-species-1" min="1" value="10">
+  
+    </br>
+
+    <label for="health-of-species-1">Starting health:</label>
+    <input type="number" id="health-of-species-1" name="health-of-species-1" min="1" value="10">
+
+    </br>
+
+    <label for="cohesion-of-species-1">Starting cohesion:</label>
+    <input type="number" id="cohesion-of-species-1" name="cohesion-of-species-1" min="1" value="10">
+  
+    </br>
+
+    <label for="aggression-of-species-1">Starting aggression:</label>
+    <input type="number" id="aggression-of-species-1" name="aggression-of-species-1" min="1" value="10">
+  
+  </div>
 </div>
+
+<input type="button" id="run-simulation" name="run-simulation" value="Run simulation!">
 
 <script>
 
@@ -61,7 +97,7 @@ function addSpecies() {
     <label for="speed-of-species-` + num_tabs + `">Starting speed:</label>
     <input type="number" id="speed-of-species-` + num_tabs + `" name="speed-of-species-` + num_tabs + `" min="1" value="10">
     
-    </br
+    </br>
 
     <label for="sight-of-species-` + num_tabs + `">Starting vision range:</label>
     <input type="number" id="sight-of-species-` + num_tabs + `" name="sight-of-species-` + num_tabs + `" min="1" value="10">
