@@ -73,26 +73,26 @@ function validate() {
       problem = true;
     }
   }
-  return !validate;
+  return !problem;
 }
 
 function generateJSON() {
   var num_tabs = $("div#species_tabs ul li").length;
   var structure = {
     numTimesteps: parseInt(document.getElementById("num-timesteps").value),
-    viewGranularity: document.getElementById("view-granularity").value,
+    viewGranularity: parseInt(document.getElementById("view-granularity").value),
     cacheViews: document.getElementById("cache-views").checked,
     species: []
   };
   for (var i = 1; i <= num_tabs; i++) {
     structure["species"].push({
-      startingNumber: document.getElementById("num-of-species-" + i).value,
-      size: document.getElementById("size-of-species-" + i).value,
-      speed: document.getElementById("speed-of-species-" + i).value,
-      sight: document.getElementById("speed-of-species-" + i).value,
-      health: document.getElementById("health-of-species-" + i).value,
-      cohesion: document.getElementById("cohesion-of-species-" + i).value,
-      aggression: document.getElementById("aggression-of-species-" + i).value,
+      startingNumber: parseInt(document.getElementById("num-of-species-" + i).value),
+      size: parseInt(document.getElementById("size-of-species-" + i).value),
+      speed: parseInt(document.getElementById("speed-of-species-" + i).value),
+      sight: parseInt(document.getElementById("speed-of-species-" + i).value),
+      health: parseInt(document.getElementById("health-of-species-" + i).value),
+      cohesion: parseFloat(document.getElementById("cohesion-of-species-" + i).value),
+      aggression: parseFloat(document.getElementById("aggression-of-species-" + i).value),
     });
   }
   console.log(num_tabs);
