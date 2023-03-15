@@ -103,7 +103,8 @@ function finalize() {
     window.alert("Something went wrong. Try checking your inputs again.");
     return
   }
-  // TODO: send post request
+  // TODO: connect to non-local host
+  $.post( "http://localhost:8080/evol/run", generateJSON(), "json");
   console.log(generateJSON());
 }
 
