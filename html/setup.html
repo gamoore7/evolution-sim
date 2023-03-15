@@ -95,8 +95,16 @@ function generateJSON() {
       aggression: parseFloat(document.getElementById("aggression-of-species-" + i).value),
     });
   }
-  console.log(num_tabs);
-  console.log(JSON.stringify(structure));
+  return JSON.stringify(structure);
+}
+
+function finalize() {
+  if (!validate()) {
+    window.alert("Something went wrong. Try checking your inputs again.");
+    return
+  }
+  // TODO: send post request
+  console.log(generateJSON());
 }
 
 </script>
@@ -164,7 +172,7 @@ function generateJSON() {
   </div>
 </div>
 
-<input type="button" id="run-simulation" name="run-simulation" value="Run simulation!" onclick="generateJSON()">
+<input type="button" id="run-simulation" name="run-simulation" value="Run simulation!" onclick="finalize()">
 
 </body>
 </html>
