@@ -1,0 +1,194 @@
+#https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+info:
+  version: 0.1
+  title: Evolution Simulator - Backend API
+  description: Broker API handles all requests between the frontend client and simulation runner.
+  contact:
+    team: Evolution Simulator
+  paths:
+    /api/:
+      get:
+        description: Ping service for health checks.
+        operationID: healthCheck
+        responses:
+          '204': # No useful content to respond with.
+            description: Service is running.
+    /api/run:
+      post:
+        description: Submit a new simulation to the run queue.
+        operationID: startNew
+        requestBody:
+          description: Input parameters for simulation run.
+          required: True
+          content:
+            application/json:
+              schema:
+                $ref: components/schemas/SimInput
+        responses:
+          '202': # Accepted but not yet acted upon.
+            description: Submission of simulation input was accepted for processing.
+          default:
+            description: Unexpected service error.
+              content:
+                application/json:
+                  schema:
+                    $ref: components/schemas/Error
+    /api/view/{id}/{batch}:
+      get:
+        description: Return up to {batch} timestep views for simulation run {id} based on number of available views.
+        operationID: viewSim
+        parameters:
+          - simulation ID: id
+            in: path
+            description: Fetch views associated with simulation ID.
+            required: true
+            schema:
+              type: unsigned integer
+              format: u64
+          - Views quantity: batch
+            in: path
+            description: Maximum possible views to return. If none, defaults to 1.
+            required: false
+            schema:
+              type: unsigned integer
+              format: u64
+              default: 1
+        responses:
+          '200':
+            description: Timestep view response.
+            content:
+              application/json:
+                schema:
+                  $ref: components/schemas/SimOutput
+          default:
+            description: Unexpected service error.
+            content:
+              application/json:
+                schema:
+                  $ref: components/schemas/Error
+    /api/save/{id}:
+      get:
+        description: Save an entire simulation run consisting of input parameters and all produced timestep views.
+        operationID: saveSim
+        parameters:
+          - simulation ID: id
+            in: path
+            description: Fetch views associated with simulation ID
+            required: true
+            schema:
+              type: unsigned integer
+              format: u64
+        requestBody:
+          content:
+            multi-part/form-data:
+          encoding:
+            gzip
+        responses:
+          '200':
+            description: Simulation save response.
+            content:
+              schema:
+                ref: components/schemas/SimSave
+            encoding:
+              gzip
+  components:
+    schemas:
+      Error:
+        type: object
+        properties:
+          code:
+            type: unsigned integer
+            format: u32
+          message:
+            type: string
+
+      SimInput:
+        type: object
+        properties:
+          numTimeSteps:
+            type: unsigned integer
+            format: u16
+            range: 1,1000
+          viewGranularity:
+            type: unsigned integer
+            format: u16
+            range: 1,1000
+            default: numTimeSteps
+          worldSizeX:
+            type: unsigned integer
+            format: u8
+            range: 1,256
+          worldSizeY:
+            type: unsigned integer
+            format: u8
+            range: 1,256
+          foodDensity:
+            type: unsigned integer
+            format: u32
+            range: 0,65536
+          species:
+            type: [components/schemas/Species]
+
+      SimOutput:
+        type: object
+        properties:
+          staticEntities:
+            type: [components/schemas/Cell]
+          dynamicEntities:
+            type: [components/schemas/Cell]
+
+      SimSave:
+        type: object
+        properties:
+          input:
+            type: components/schemas/SimInput
+          view:
+            type: [components/SimOutput]
+
+      Species:
+        type: object
+        properties:
+          startingNumber:
+            type: unsigned integer
+            format: u8
+            range: 1,256
+            default: 1
+          size:
+            type: unsigned integer
+            format: u8
+            range: 1,256
+            default: 1
+          speed:
+            type: unsigned integer
+            format: u8
+            range: 1,256
+            default: 1
+          sight:
+            type: unsigned integer
+            format: u8
+            range: 1,256
+            default: 1
+          health:
+            type: unsigned integer
+            format: u8
+            range: 1,100
+            default: 100
+          cohesion:
+            type: unsigned integer
+            format: u8
+            range: 1,100
+            default: 50
+          aggression:
+            type: unsigned integer
+            format: u8
+            range: 1,100
+            default: 50
+
+      Cell:
+        type: unsigned integer
+        format: u32
+        description: |
+          [31-24]: unused
+          [23-16]: X-coordinate
+          [15-8]: Y-coordinate
+          [7-0]: Entity-type
