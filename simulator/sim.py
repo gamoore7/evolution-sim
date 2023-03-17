@@ -35,7 +35,7 @@ class Creature(Entity):
         if isinstance(column, Entity):
           entities.append(column)
     entities.sort(key = lambda c : (c.x - self.x)**2 + (c.y - self.y)**2)
-    return entities
+    return filter(lambda c : c != self, entities)
 
   def nearby_creatures(self, context):
     entities = self.nearby_entities(context)
@@ -256,7 +256,7 @@ class World:
           out.append(" ")
       print(" ".join(out))
 
-world = World('{"numTimesteps":10,"viewGranularity":1,"cacheViews":true,"worldSizeX":15,"worldSizeY":15,"foodDensity":0.1,"species":[{"startingNumber":5,"size":1,"speed":3,"sight":5,"health":5,"cohesion":0.5,"aggression":0.5}]}')
+world = World('{"numTimesteps":10,"viewGranularity":1,"cacheViews":true,"worldSizeX":100,"worldSizeY":100,"foodDensity":0.1,"species":[{"startingNumber":50,"size":1,"speed":5,"sight":20,"health":50,"cohesion":0.5,"aggression":0.5}]}')
 for i in range(world.numTimesteps):
   world.log()
   world.calculateNextStep()
