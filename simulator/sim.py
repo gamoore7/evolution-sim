@@ -7,6 +7,9 @@ class Entity:
   def __init__(self, location):
     (self.x, self.y) = location
 
+  def toCell(self):
+    return (self.x << 16) ^ (self.y << 8)
+
 class Food(Entity):
   pass
 
@@ -88,6 +91,9 @@ class Creature(Entity):
       target_loc = (int(self.x + distance * math.cos(angle)), int(self.y + distance * math.sin(angle)))
     return target_loc
 
+  def toCell(self):
+    return super().toCell() ^ self.species
+
   def act(self, context):
     """Decide on what action to take in a given context."""
     # What constitutes context? Should the creature calculate what it is able to see from
@@ -167,6 +173,7 @@ class World:
     self.numTimesteps = structure["numTimesteps"]
     self.foodDensity = structure["foodDensity"]
     self.allCreatures = []
+    self.history = []
     for (j, species) in enumerate(structure["species"]):
       print("Initializing species " + str(j+1))
       for i in range(species["startingNumber"]):
@@ -243,6 +250,19 @@ class World:
         # attack
     self.allCreatures = [c for i, c in enumerate(self.allCreatures) if i not in dead] # remove dead creatures
 
+  def flatten(self):
+    return [cell for row in self.grid for cell in row]
+
+  def simulate(self):
+    self.history.append({"staticEntities": [c.toCell() for c in filter(lambda a : isinstance(a, Food), self.flatten())], "dynamicEntities": [c.toCell() for c in filter(lambda a : isinstance(a, Creature), self.flatten())]}) 
+    for step in range(self.numTimesteps):
+      food = [c.toCell() for c in filter(lambda a : isinstance(a, Food), self.flatten())]
+      old_food = self.history[-1]["staticEntities"]
+      delta_food = [c for c in food if c not in old_food] + [c for c in old_food if c not in food] # xor
+      self.history.append({"staticEntities": delta_food, "dynamicEntities": [c.toCell() for c in filter(lambda a : isinstance(a, Creature), self.flatten())]}) # {staticEntities: [], dynamicEntities: []}
+      self.calculateNextStep()
+
+
   def log(self):
     print("--------------------------")
     for i in range(self.worldSizeY):
@@ -257,7 +277,6 @@ class World:
       print(" ".join(out))
 
 world = World('{"numTimesteps":10,"viewGranularity":1,"cacheViews":true,"worldSizeX":100,"worldSizeY":100,"foodDensity":0.1,"species":[{"startingNumber":50,"size":1,"speed":5,"sight":20,"health":50,"cohesion":0.5,"aggression":0.5}]}')
-for i in range(world.numTimesteps):
-  world.log()
-  world.calculateNextStep()
-world.log()
+
+world.simulate()
+print(world.history)
