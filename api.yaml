@@ -25,8 +25,14 @@ info:
               schema:
                 $ref: components/schemas/SimInput
         responses:
-          '202': # Accepted but not yet acted upon.
+          '200': # Accepted but not yet acted upon.
             description: Submission of simulation input was accepted for processing.
+            content:
+              application/json:
+                schema:
+                  jobID:
+                    type: unsigned integer
+                    format: u64
           default:
             description: Unexpected service error.
               content:
