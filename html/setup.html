@@ -17,7 +17,7 @@ $(function() {
 <script>
 
 function addSpecies() {
-  var num_tabs = $("div#species_tabs ul li").length + 1;
+  var num_tabs = $("div#species_tabs ol li").length + 1;
 
   var tab_html = `
     <label for="num-of-species-` + num_tabs + `">Number of creatures to begin with:</label>
@@ -54,7 +54,7 @@ function addSpecies() {
     <input type="number" id="aggression-of-species-` + num_tabs + `" name="aggression-of-species-` + num_tabs + `" min="1" value="0.5">
  `;
 
-  $("div#species_tabs ul").append(
+  $("div#species_tabs ol").append(
     "<li><a href='#species_" + num_tabs + "'>" + num_tabs + "</a></li>"
   );
 
@@ -65,7 +65,7 @@ function addSpecies() {
 }
 
 function validate() {
-  var num_tabs = $("div#species_tabs ul li").length;
+  var num_tabs = $("div#species_tabs ol li").length;
   var problem = false;
   if (document.getElementById("num-timesteps").value < 1 || document.getElementById("view-granularity").value < 1 || document.getElementById("view-granularity").value > document.getElementById("num-timesteps").value || document.getElementById("world-size-x").value < 1 || document.getElementById("world-size-y").value < 1 || document.getElementById("food-density").value < 0 || document.getElementById("food-density").value > 1) { problem = true;}
   for (var i = 1; i <= num_tabs; i++) {
@@ -77,7 +77,7 @@ function validate() {
 }
 
 function generateJSON() {
-  var num_tabs = $("div#species_tabs ul li").length;
+  var num_tabs = $("div#species_tabs ol li").length;
   var structure = {
     numTimesteps: parseInt(document.getElementById("num-timesteps").value),
     viewGranularity: parseInt(document.getElementById("view-granularity").value),
@@ -136,9 +136,9 @@ function finalize() {
 <input type="button" id="add-species" name="add-species" value="Add species" onclick="addSpecies()"> 
 
 <div id="species_tabs">
-  <ul>  
+  <ol>  
     <li><a href="#species_1">1</a></li>  
-  </ul> 
+  </ol> 
   <div id="species_1">
     <label for="num-of-species-1">Number of creatures to begin with:</label>
     <input type="number" id="num-of-species-1" name="num-of-species-1" min="1" value="10">
