@@ -33,27 +33,31 @@ function color_of(creature) {
   return `rgb(${r},${g},${b})`;
 }
 
-var passedInfo = {
-    //info from the previous html file will be passed here
-    numTimesteps: 10,
-    viewGranularity: 1,
-    cacheViews: true,
-    worldSizeX: 100,
-    worldSizeY: 100,
-    foodDensity: 0.1,
-    species: []
-};
-  for (var i = 0; i < 5; i++) {
-    passedInfo["species"].push({
-      startingNumber: Math.floor(Math.random()*50)+1,
-      size: Math.floor(Math.random()*5)+1,
-      speed: Math.floor(Math.random()*5)+1,
-      sight: Math.floor(Math.random()*10)+1,
-      health: Math.floor(Math.random()*100)+1,
-      cohesion: Math.random(),
-      aggression: Math.random(),
-    });
-}
+//info from setup.html
+passedInfo = JSON.parse('{"numTimesteps":10,"viewGranularity":1,"cacheViews":true,"worldSizeX":100,"worldSizeY":100,"foodDensity":0.1,"species":[{"startingNumber":50,"size":1,"speed":5,"sight":6,"health":50,"cohesion":0.5,"aggression":0.5}, {"startingNumber":30,"size":3,"speed":2,"sight":10,"health":70,"cohesion":0.7,"aggression":0.2}, {"startingNumber":15,"size":5,"speed":1,"sight":3,"health":40,"cohesion":0.9,"aggression":0.8}]}')
+
+// For testing with randomly generated species
+// var passedInfo = {
+//     //info from the previous html file will be passed here
+//     numTimesteps: 10,
+//     viewGranularity: 1,
+//     cacheViews: true,
+//     worldSizeX: 125,
+//     worldSizeY: 50,
+//     foodDensity: 0.1,
+//     species: []
+// };
+//   for (var i = 0; i < 5; i++) {
+//     passedInfo["species"].push({
+//       startingNumber: Math.floor(Math.random()*50)+1,
+//       size: Math.floor(Math.random()*5)+1,
+//       speed: Math.floor(Math.random()*5)+1,
+//       sight: Math.floor(Math.random()*10)+1,
+//       health: Math.floor(Math.random()*100)+1,
+//       cohesion: Math.random(),
+//       aggression: Math.random(),
+//     });
+// }
 
 
 var sim_width = passedInfo["worldSizeX"];
@@ -99,27 +103,7 @@ for (y = 0; y <= sim_height + 1; y++) {
 ctx.stroke();
 
 function pythonInfo() {
-    //run python file here and grab info
-    var passedInfo = {
-        numTimesteps: 10,
-        viewGranularity: 1,
-        cacheViews: true,
-        worldSizeX: 100,
-        worldSizeY: 100,
-        foodDensity: 0.1,
-        species: []
-    };
-    for (var i = 0; i < 5; i++) {
-        passedInfo["species"].push({
-        startingNumber: Math.floor(Math.random()*50)+1,
-        size: Math.floor(Math.random()*5)+1,
-        speed: Math.floor(Math.random()*5)+1,
-        sight: Math.floor(Math.random()*10)+1,
-        health: Math.floor(Math.random()*100)+1,
-        cohesion: Math.random(),
-        aggression: Math.random(),
-        });
-    }
+    //grab info from python file here
 }
 
 </script>
