@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> Evolution Simulator </title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script>
+
+$(function() {
+  $( "#species_tabs" ).tabs();
+});  
+
+</script> 
+<script>
+
+function addSpecies() {
+  var num_tabs = $("div#species_tabs ol li").length + 1;
+
+  var tab_html = `
+    <label for="num-of-species-` + num_tabs + `">Number of creatures to begin with:</label>
+    <input type="number" id="num-of-species-` + num_tabs + `" name="num-of-species-` + num_tabs + `" min="1" value="10">
+
+    </br>
+
+    <label for="size-of-species-` + num_tabs + `">Starting size:</label>
+    <input type="number" id="size-of-species-` + num_tabs + `" name="size-of-species-` + num_tabs + `" min="1" value="2">
+
+    </br>
+
+    <label for="speed-of-species-` + num_tabs + `">Starting speed:</label>
+    <input type="number" id="speed-of-species-` + num_tabs + `" name="speed-of-species-` + num_tabs + `" min="1" value="10">
+    
+    </br>
+
+    <label for="sight-of-species-` + num_tabs + `">Starting vision range:</label>
+    <input type="number" id="sight-of-species-` + num_tabs + `" name="sight-of-species-` + num_tabs + `" min="1" value="10">
+    
+    </br>
+
+    <label for="health-of-species-` + num_tabs + `">Starting health:</label>
+    <input type="number" id="health-of-species-` + num_tabs + `" name="health-of-species-` + num_tabs + `" min="1" value="10">
+    
+    </br>
+
+    <label for="cohesion-of-species-` + num_tabs + `">Starting cohesion:</label>
+    <input type="number" id="cohesion-of-species-` + num_tabs + `" name="cohesion-of-species-` + num_tabs + `" min="1" value="0.5">
+    
+    </br>
+
+    <label for="aggression-of-species-` + num_tabs + `">Starting aggression:</label>
+    <input type="number" id="aggression-of-species-` + num_tabs + `" name="aggression-of-species-` + num_tabs + `" min="1" value="0.5">
+ `;
+
+  $("div#species_tabs ol").append(
+    "<li><a href='#species_" + num_tabs + "'>" + num_tabs + "</a></li>"
+  );
+
+  $("div#species_tabs").append(
+    "<div id='species_" + num_tabs + "'>" + tab_html + "</div>"
+  );
+  $("div#species_tabs").tabs("refresh");
+}
+
+function validate() {
+  var num_tabs = $("div#species_tabs ol li").length;
+  var problem = false;
+  if (document.getElementById("num-timesteps").value < 1 || document.getElementById("view-granularity").value < 1 || document.getElementById("view-granularity").value > document.getElementById("num-timesteps").value || document.getElementById("world-size-x").value < 1 || document.getElementById("world-size-y").value < 1 || document.getElementById("food-density").value < 0 || document.getElementById("food-density").value > 1) { problem = true;}
+  for (var i = 1; i <= num_tabs; i++) {
+    if (document.getElementById("num-of-species-" + i).value < 1 || document.getElementById("size-of-species-" + i).value < 1 || document.getElementById("speed-of-species-" + i).value <= 0 || document.getElementById("sight-of-species-" + i).value <= 0 || document.getElementById("health-of-species-" + i).value <= 0 || document.getElementById("cohesion-of-species-" + i).value < 0 || document.getElementById("cohesion-of-species-" + i).value > 1 || document.getElementById("aggression-of-species-" + i).value < 0 || document.getElementById("aggression-of-species-" + i).value > 1) {
+      problem = true;
+    }
+  }
+  return !problem;
+}
+
+function generateJSON() {
+  var num_tabs = $("div#species_tabs ol li").length;
+  var structure = {
+    numTimesteps: parseInt(document.getElementById("num-timesteps").value),
+    viewGranularity: parseInt(document.getElementById("view-granularity").value),
+    cacheViews: document.getElementById("cache-views").checked,
+    worldSizeX: parseInt(document.getElementById("world-size-x").value),
+    worldSizeY: parseInt(document.getElementById("world-size-y").value),
+    foodDensity: parseFloat(document.getElementById("food-density").value),
+    species: []
+  };
+  for (var i = 1; i <= num_tabs; i++) {
+    structure["species"].push({
+      startingNumber: parseInt(document.getElementById("num-of-species-" + i).value),
+      size: parseInt(document.getElementById("size-of-species-" + i).value),
+      speed: parseInt(document.getElementById("speed-of-species-" + i).value),
+      sight: parseInt(document.getElementById("sight-of-species-" + i).value),
+      health: parseInt(document.getElementById("health-of-species-" + i).value),
+      cohesion: parseFloat(document.getElementById("cohesion-of-species-" + i).value),
+      aggression: parseFloat(document.getElementById("aggression-of-species-" + i).value),
+    });
+  }
+  return JSON.stringify(structure);
+}
+
+function finalize() {
+  if (!validate()) {
+    window.alert("Something went wrong. Try checking your inputs again.");
+    return
+  }
+  // TODO: connect to non-local host
+  $.post( "http://localhost:8080/evol/run", generateJSON(), "json");
+  console.log(generateJSON());
+}
+
+</script>
+
+</head>
+<body>
+
+<h1> Welcome to the Evolution Simulator!</h1>
+
+<label for="num-timesteps">Number of iterations to run:</label>
+<input type="number" id="num-timesteps" name="num-timesteps" min="1" value="1000000">
+
+</br>
+
+<label for="view-granularity">View granularity (low is fine-grained, high is coarse-grained; we recommend coarse-grained on slower networks):</label>
+<input type="number" id="view-granularity" name="view-granularity" min="1" value="10">
+
+</br>
+
+<input type="checkbox" id="cache-views" name="cache-views" checked>
+<label for="cache-views">Cache simulation (recommended)</label>
+
+</br>
+
+
+<div id="species_tabs">
+  <ol>  
+    <input type="button" id="add-species" name="add-species" value="Add species" onclick="addSpecies()">
+    <li><a href="#species_1">1</a></li>  
+  </ol> 
+  <div id="species_1">
+    <label for="num-of-species-1">Number of creatures to begin with:</label>
+    <input type="number" id="num-of-species-1" name="num-of-species-1" min="1" value="10">
+
+    </br>
+
+    <label for="size-of-species-1">Starting size:</label>
+    <input type="number" id="size-of-species-1" name="size-of-species-1" min="1" value="2">
+
+    </br>
+
+    <label for="speed-of-species-1">Starting speed:</label>
+    <input type="number" id="speed-of-species-1" name="speed-of-species-1" min="1" value="10">
+    
+    </br>
+
+    <label for="sight-of-species-1">Starting vision range:</label>
+    <input type="number" id="sight-of-species-1" name="sight-of-species-1" min="1" value="10">
+  
+    </br>
+
+    <label for="health-of-species-1">Starting health:</label>
+    <input type="number" id="health-of-species-1" name="health-of-species-1" min="1" value="10">
+
+    </br>
+
+    <label for="cohesion-of-species-1">Starting cohesion:</label>
+    <input type="number" id="cohesion-of-species-1" name="cohesion-of-species-1" min="1" value="0.5">
+  
+    </br>
+
+    <label for="aggression-of-species-1">Starting aggression:</label>
+    <input type="number" id="aggression-of-species-1" name="aggression-of-species-1" min="1" value="0.5">
+  
+  </div>
+</div>
+
+<label for="world-size-x">X dimension of the world:</label>
+<input type="number" id="world-size-x" name="world-size-x" min="1" value="1000">
+
+</br>
+
+<label for="world-size-y">Y dimension of the world:</label>
+<input type="number" id="world-size-y" name="world-size-y" min="1" value="1000">
+
+</br>
+
+<label for="food-density">Food density (0 to 1):</label>
+<input type="number" id="food-density" name="food-density" min="0" max="1" value="0.1" step="0.01">
+
+</br>
+
+<input type="button" id="run-simulation" name="run-simulation" value="Run simulation!" onclick="finalize()">
+
+</body>
+</html>
