@@ -34,6 +34,7 @@ function color_of(creature) {
 }
 
 var passedInfo = {
+    //info from the previous html file will be passed here
     numTimesteps: 10,
     viewGranularity: 1,
     cacheViews: true,
@@ -58,8 +59,6 @@ var passedInfo = {
 var sim_width = passedInfo["worldSizeX"];
 var sim_height = passedInfo["worldSizeY"];
 var sim_tile_size = 10; 
-//maybe make cell size smaller? That way we can have bigger simulations without user having to scroll
-//alternatively make creature size smaller so grid isn't cluttered with more than a couple species
 
 const creatures = [];
 
@@ -99,7 +98,34 @@ for (y = 0; y <= sim_height + 1; y++) {
 }
 ctx.stroke();
 
+function pythonInfo() {
+    //run python file here and grab info
+    var passedInfo = {
+        numTimesteps: 10,
+        viewGranularity: 1,
+        cacheViews: true,
+        worldSizeX: 100,
+        worldSizeY: 100,
+        foodDensity: 0.1,
+        species: []
+    };
+    for (var i = 0; i < 5; i++) {
+        passedInfo["species"].push({
+        startingNumber: Math.floor(Math.random()*50)+1,
+        size: Math.floor(Math.random()*5)+1,
+        speed: Math.floor(Math.random()*5)+1,
+        sight: Math.floor(Math.random()*10)+1,
+        health: Math.floor(Math.random()*100)+1,
+        cohesion: Math.random(),
+        aggression: Math.random(),
+        });
+    }
+}
+
 </script>
+
+<p></p>
+<button type="button" onclick="pythonInfo();window.location.reload();">Simulate Evolution</button>
 
 </body>
 </html>
