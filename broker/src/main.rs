@@ -35,7 +35,7 @@ async fn run(pool: web::Data<deadpool_redis::Pool>, json: web::Json<SimInput>) -
     let res = json!({"jobID":job_id});
     let db_entry = serde_json::to_string(&json).unwrap();
 
-    match cmd("SET")
+    match cmd("LPUSH")
         .arg(&[REDIS_JOBS_QUEUE, &db_entry])
         .query_async::<_, ()>(&mut conn)
         .await {
