@@ -129,9 +129,9 @@ info:
             format: u8
             range: 1,256
           foodDensity:
-            type: unsigned integer
-            format: u32
-            range: 0,65536
+            type: float
+            format: f32
+            range: 0,1
           species:
             type: [components/schemas/Species]
 
@@ -186,13 +186,13 @@ info:
             range: 1,100
             default: 100
           cohesion:
-            type: unsigned integer
-            format: u8
+            type: float
+            format: f32
             range: 1,100
             default: 50
           aggression:
-            type: unsigned integer
-            format: u8
+            type: float
+            format: f32
             range: 1,100
             default: 50
 
