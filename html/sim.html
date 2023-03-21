@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title> Evolution Simulator </title>
+<title> Evolution Simulator - Launch Page </title>
 </head>
 <body>
 
@@ -33,23 +33,49 @@ function color_of(creature) {
   return `rgb(${r},${g},${b})`;
 }
 
-var sim_width = 100;
-var sim_height = 100;
-var sim_tile_size = 10;
+var passedInfo = {
+    numTimesteps: 10,
+    viewGranularity: 1,
+    cacheViews: true,
+    worldSizeX: 100,
+    worldSizeY: 100,
+    foodDensity: 0.1,
+    species: []
+};
+  for (var i = 0; i < 5; i++) {
+    passedInfo["species"].push({
+      startingNumber: Math.floor(Math.random()*50)+1,
+      size: Math.floor(Math.random()*5)+1,
+      speed: Math.floor(Math.random()*5)+1,
+      sight: Math.floor(Math.random()*10)+1,
+      health: Math.floor(Math.random()*100)+1,
+      cohesion: Math.random(),
+      aggression: Math.random(),
+    });
+}
+
+
+var sim_width = passedInfo["worldSizeX"];
+var sim_height = passedInfo["worldSizeY"];
+var sim_tile_size = 10; 
+//maybe make cell size smaller? That way we can have bigger simulations without user having to scroll
+//alternatively make creature size smaller so grid isn't cluttered with more than a couple species
 
 const creatures = [];
 
-for (i = 0; i < 100; i++) {
-  creatures.push(new Creature(
-    Math.floor(Math.random()*sim_width),
-    Math.floor(Math.random()*sim_height),
-    Math.floor(Math.random()*5)+1, // 1 to 5
-    Math.floor(Math.random()*5)+1, // 1 to 5
-    Math.floor(Math.random()*10)+1, // 1 to 10
-    Math.floor(Math.random()*100)+1, // 1 to 100
-    Math.random(), // 0 to 1
-    Math.random() // 0 to 1
-  ));
+for (j = 0; j < passedInfo["species"].length; j++) {
+    for (i = 0; i < passedInfo["species"][j]["startingNumber"]; i++) {
+    creatures.push(new Creature(
+        Math.floor(Math.random()*sim_width),
+        Math.floor(Math.random()*sim_height),
+        passedInfo["species"][j]["size"], // 1 to 5
+        passedInfo["species"][j]["speed"], // 1 to 5
+        passedInfo["species"][j]["sight"], // 1 to 10
+        passedInfo["species"][j]["health"], // 1 to 100
+        passedInfo["species"][j]["cohesion"], // 0 to 1
+        passedInfo["species"][j]["aggression"] // 0 to 1
+    ));
+    }
 }
 
 var canvas = document.getElementById("sim-canvas");
