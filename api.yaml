@@ -138,6 +138,12 @@ info:
       SimOutput:
         type: object
         properties:
+          views:
+            type: [[components/TimestepView]; N]
+
+      TimeStepView:
+        type: object
+        properties:
           staticEntities:
             type: [components/schemas/Cell]
           dynamicEntities:
@@ -149,7 +155,7 @@ info:
           input:
             type: components/schemas/SimInput
           view:
-            type: [components/SimOutput]
+            type: [[components/SimOutput]; input.numTimeSteps]
 
       Species:
         type: object
