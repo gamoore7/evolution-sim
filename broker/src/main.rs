@@ -7,7 +7,7 @@ use serde_json::json;
 use actix_web::{HttpServer, HttpResponse, App, get, post, web, Responder, Result};
 use deadpool_redis::{redis::cmd, Config, Runtime, CreatePoolError};
 
-//use types::SimInput;
+use types::SimInput;
 
 const REDIS_JOBS_QUEUE: &'static str = "jobs";
 
@@ -25,7 +25,7 @@ async fn load() -> impl Responder {
 }
 
 #[post("/run")]
-async fn run(pool: web::Data<deadpool_redis::Pool>, json: web::Json<types::SimInput>) -> impl Responder {
+async fn run(pool: web::Data<deadpool_redis::Pool>, json: web::Json<SimInput>) -> impl Responder {
     println!("{:?}", json);
     let mut conn = pool.get().await.unwrap();
     let job_id = {
