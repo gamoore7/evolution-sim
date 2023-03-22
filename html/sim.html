@@ -60,56 +60,63 @@ passedInfo = JSON.parse('{"numTimesteps":10,"viewGranularity":1,"cacheViews":tru
 // }
 
 
-var sim_width = passedInfo["worldSizeX"];
-var sim_height = passedInfo["worldSizeY"];
-var sim_tile_size = 10; 
+function build_canvas() {
+  var sim_width = passedInfo["worldSizeX"];
+  var sim_height = passedInfo["worldSizeY"];
+  var sim_tile_size = 10; 
 
-const creatures = [];
+  const creatures = [];
 
-for (j = 0; j < passedInfo["species"].length; j++) {
-    for (i = 0; i < passedInfo["species"][j]["startingNumber"]; i++) {
-    creatures.push(new Creature(
-        Math.floor(Math.random()*sim_width),
-        Math.floor(Math.random()*sim_height),
-        passedInfo["species"][j]["size"], // 1 to 5
-        passedInfo["species"][j]["speed"], // 1 to 5
-        passedInfo["species"][j]["sight"], // 1 to 10
-        passedInfo["species"][j]["health"], // 1 to 100
-        passedInfo["species"][j]["cohesion"], // 0 to 1
-        passedInfo["species"][j]["aggression"] // 0 to 1
-    ));
-    }
+  for (j = 0; j < passedInfo["species"].length; j++) {
+      for (i = 0; i < passedInfo["species"][j]["startingNumber"]; i++) {
+      creatures.push(new Creature(
+          Math.floor(Math.random()*sim_width),
+          Math.floor(Math.random()*sim_height),
+          passedInfo["species"][j]["size"], // 1 to 5
+          passedInfo["species"][j]["speed"], // 1 to 5
+          passedInfo["species"][j]["sight"], // 1 to 10
+          passedInfo["species"][j]["health"], // 1 to 100
+          passedInfo["species"][j]["cohesion"], // 0 to 1
+          passedInfo["species"][j]["aggression"] // 0 to 1
+      ));
+      }
+  }
+
+  var canvas = document.getElementById("sim-canvas");
+  var ctx = canvas.getContext("2d");
+
+  canvas.width = sim_width * sim_tile_size;
+  canvas.height = sim_height * sim_tile_size;
+
+  creatures.forEach(c => {console.log(color_of(c)); ctx.fillStyle = color_of(c); ctx.fillRect(c.x * sim_tile_size, c.y * sim_tile_size, c.size * sim_tile_size, c.size * sim_tile_size);});
+
+
+  ctx.fillStyle = "black";
+  ctx.beginPath();
+  for (x = 0; x <= sim_width + 1; x++) {
+    ctx.moveTo(x * sim_tile_size, 0);
+    ctx.lineTo(x * sim_tile_size, sim_tile_size * sim_height);
+  }
+  for (y = 0; y <= sim_height + 1; y++) {
+    ctx.moveTo(0, y * sim_tile_size);
+    ctx.lineTo(sim_tile_size * sim_width, y * sim_tile_size);
+  }
+  ctx.stroke();
 }
 
-var canvas = document.getElementById("sim-canvas");
-var ctx = canvas.getContext("2d");
-
-canvas.width = sim_width * sim_tile_size;
-canvas.height = sim_height * sim_tile_size;
-
-creatures.forEach(c => {console.log(color_of(c)); ctx.fillStyle = color_of(c); ctx.fillRect(c.x * sim_tile_size, c.y * sim_tile_size, c.size * sim_tile_size, c.size * sim_tile_size);});
-
-
-ctx.fillStyle = "black";
-ctx.beginPath();
-for (x = 0; x <= sim_width + 1; x++) {
-  ctx.moveTo(x * sim_tile_size, 0);
-  ctx.lineTo(x * sim_tile_size, sim_tile_size * sim_height);
-}
-for (y = 0; y <= sim_height + 1; y++) {
-  ctx.moveTo(0, y * sim_tile_size);
-  ctx.lineTo(sim_tile_size * sim_width, y * sim_tile_size);
-}
-ctx.stroke();
 
 function pythonInfo() {
     //grab info from python file here
+    passedInfo = JSON.parse('{"numTimesteps":10,"viewGranularity":1,"cacheViews":true,"worldSizeX":100,"worldSizeY":100,"foodDensity":0.1,"species":[{"startingNumber":50,"size":1,"speed":5,"sight":6,"health":50,"cohesion":0.5,"aggression":0.5}, {"startingNumber":30,"size":3,"speed":2,"sight":10,"health":70,"cohesion":0.7,"aggression":0.2}, {"startingNumber":15,"size":5,"speed":1,"sight":3,"health":40,"cohesion":0.9,"aggression":0.8}]}')
+    build_canvas()
 }
+
+build_canvas()
 
 </script>
 
 <p></p>
-<button type="button" onclick="pythonInfo();window.location.reload();">Simulate Evolution</button>
+<button type="button" onclick="pythonInfo();">Simulate Evolution</button>
 
 </body>
 </html>
