@@ -27,42 +27,20 @@ class Creature {
 
 function color_of(creature) {
   // Color based on traits
-  var r = (creature.speed + creature.size * 64) % 256;
+  var r = (creature.speed + creature.size) % 256;
   var g = (creature.view_range + creature.max_health) % 256;
-  var b = ((creature.cohesion + creature.aggression) * 128) % 256;
+  var b = ((creature.cohesion + creature.aggression) * 1.28) % 256;
   return `rgb(${r},${g},${b})`;
 }
 
-//info from setup.html
-passed = JSON.parse('{"numTimesteps":10,"viewGranularity":1,"cacheViews":true,"worldSizeX":100,"worldSizeY":100,"foodDensity":0.1,"species":[{"startingNumber":50,"size":1,"speed":5,"sight":6,"health":50,"cohesion":0.5,"aggression":0.5}, {"startingNumber":30,"size":3,"speed":2,"sight":10,"health":70,"cohesion":0.7,"aggression":0.2}, {"startingNumber":15,"size":5,"speed":1,"sight":3,"health":40,"cohesion":0.9,"aggression":0.8}]}')
 
-// For testing with randomly generated species
-// var passedInfo = {
-//     //info from the previous html file will be passed here
-//     numTimesteps: 10,
-//     viewGranularity: 1,
-//     cacheViews: true,
-//     worldSizeX: 125,
-//     worldSizeY: 50,
-//     foodDensity: 0.1,
-//     species: []
-// };
-//   for (var i = 0; i < 5; i++) {
-//     passedInfo["species"].push({
-//       startingNumber: Math.floor(Math.random()*50)+1,
-//       size: Math.floor(Math.random()*5)+1,
-//       speed: Math.floor(Math.random()*5)+1,
-//       sight: Math.floor(Math.random()*10)+1,
-//       health: Math.floor(Math.random()*100)+1,
-//       cohesion: Math.random(),
-//       aggression: Math.random(),
-//     });
-// }
 
+//grab info from setup.html here
+passed = JSON.parse('{"numTimesteps":10,"viewGranularity":1,"cacheViews":true,"worldSizeX":100,"worldSizeY":100,"foodDensity":0.1,"species":[{"startingNumber":50,"size":138,"speed":202,"sight":78,"health":256,"cohesion":80,"aggression":43}, {"startingNumber":30,"size":135,"speed":69,"sight":250,"health":150,"cohesion":23,"aggression":90}, {"startingNumber":15,"size":14,"speed":198,"sight":34,"health":148,"cohesion":40,"aggression":8}]}')
 
 function build_canvas(passedInfo) {
-  var sim_width = passedInfo["worldSizeX"];
-  var sim_height = passedInfo["worldSizeY"];
+  var sim_width = passedInfo["worldSizeX"]; 
+  var sim_height = passedInfo["worldSizeY"]; 
   var sim_tile_size = 10; 
 
   const creatures = [];
@@ -72,12 +50,12 @@ function build_canvas(passedInfo) {
       creatures.push(new Creature(
           Math.floor(Math.random()*sim_width),
           Math.floor(Math.random()*sim_height),
-          passedInfo["species"][j]["size"], // 1 to 5
-          passedInfo["species"][j]["speed"], // 1 to 5
-          passedInfo["species"][j]["sight"], // 1 to 10
-          passedInfo["species"][j]["health"], // 1 to 100
-          passedInfo["species"][j]["cohesion"], // 0 to 1
-          passedInfo["species"][j]["aggression"] // 0 to 1
+          passedInfo["species"][j]["size"], // 1 to 256
+          passedInfo["species"][j]["speed"], // 1 to 256
+          passedInfo["species"][j]["sight"], // 1 to 256
+          passedInfo["species"][j]["health"], // 1 to 256
+          passedInfo["species"][j]["cohesion"], // 0 to 100
+          passedInfo["species"][j]["aggression"] // 0 to 100
       ));
       }
   }
@@ -87,8 +65,9 @@ function build_canvas(passedInfo) {
 
   canvas.width = sim_width * sim_tile_size;
   canvas.height = sim_height * sim_tile_size;
+  const size_irrelevant = 1
 
-  creatures.forEach(c => {console.log(color_of(c)); ctx.fillStyle = color_of(c); ctx.fillRect(c.x * sim_tile_size, c.y * sim_tile_size, c.size * sim_tile_size, c.size * sim_tile_size);});
+  creatures.forEach(c => {console.log(color_of(c)); ctx.fillStyle = color_of(c); ctx.fillRect(c.x * sim_tile_size, c.y * sim_tile_size, size_irrelevant * sim_tile_size, size_irrelevant * sim_tile_size);});
 
 
   ctx.fillStyle = "black";
@@ -106,8 +85,8 @@ function build_canvas(passedInfo) {
 
 
 function pythonInfo() {
-    //grab info from python file here
-    passed = JSON.parse('{"numTimesteps":10,"viewGranularity":1,"cacheViews":true,"worldSizeX":100,"worldSizeY":100,"foodDensity":0.1,"species":[{"startingNumber":50,"size":2,"speed":5,"sight":6,"health":30,"cohesion":0.1,"aggression":0.1}, {"startingNumber":30,"size":3,"speed":2,"sight":10,"health":70,"cohesion":0.7,"aggression":0.2}, {"startingNumber":15,"size":5,"speed":1,"sight":3,"health":40,"cohesion":0.9,"aggression":0.8}]}')
+    //grab info otput after python file here
+    passed = JSON.parse('{"numTimesteps":10,"viewGranularity":1,"cacheViews":true,"worldSizeX":100,"worldSizeY":100,"foodDensity":0.1,"species":[{"startingNumber":50,"size":138,"speed":202,"sight":78,"health":256,"cohesion":80,"aggression":43}, {"startingNumber":30,"size":135,"speed":69,"sight":250,"health":150,"cohesion":23,"aggression":90}, {"startingNumber":15,"size":68,"speed":225,"sight":52,"health":160,"cohesion":41,"aggression":87}]}')
     build_canvas(passed)
 }
 
